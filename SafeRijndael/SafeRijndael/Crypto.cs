@@ -47,11 +47,11 @@ namespace SafeRijndael
                 switch (CryptoMode) 
                 {
                     case CryptoMode.ENCRYPTION://暗号化
-                        await FileEncryption(password, readPath, outPath + "\\" +　
+                        await FileEncryption(password, readPath, outPath + @"\" +　
                             Path.GetFileName(readPath) + ".safer", token);
                         break;
                     case CryptoMode.DENCRYPTION://復号
-                        await FileDecryption(password, readPath, outPath + "\\" + 
+                        await FileDecryption(password, readPath, outPath + @"\" + 
                             Path.GetFileName(readPath).Replace(".safer", ""), token);
                         break;
                 }
@@ -156,11 +156,11 @@ namespace SafeRijndael
                             while ((len = readfs.Read(buffer, 0, 4096)) > 0)
                             {
                                 await ds.WriteAsync(buffer, 0, len);
-                                Progress.EncryptionProgressUpdate(progress); progress += len;//進捗状況
+                                Progress.EncryptionUpdate(progress); progress += len;//進捗状況
 
                                 token.ThrowIfCancellationRequested();//処理の中断
                             }
-                            Progress.ProgressMaximumPatch(outPath);//余ったプログレスバーの最大値を埋める
+                            Progress.MaximumPatch(outPath);//余ったプログレスバーの最大値を埋める
                         }
                     }
                 }
@@ -189,7 +189,7 @@ namespace SafeRijndael
                             while ((len = ds.Read(buffer, 0, 4096)) > 0)
                             {
                                 await writefs.WriteAsync(buffer, 0, len);
-                                Progress.DencryptionProgressUpdate(progress); progress += len;//進捗状況
+                                Progress.DencryptionUpdate(progress); progress += len;//進捗状況
 
                                 token.ThrowIfCancellationRequested();//処理の中断
                             }

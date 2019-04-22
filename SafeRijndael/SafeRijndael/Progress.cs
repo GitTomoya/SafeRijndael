@@ -10,7 +10,7 @@ namespace SafeRijndael
         public static Label Label1 { get; set; }
         public static Label Label2 { get; set; }
 
-        public static void InitializationProgress(string path)
+        public static void Initialization(string path)
         {
             if (ProgressBar1.Style == ProgressBarStyle.Blocks)
                 ProgressBar1.Minimum = 0; ProgressBar1.Value = 0; //最小値及び現在の値
@@ -21,7 +21,7 @@ namespace SafeRijndael
             Label1.Text = "暗号化の為のハッシュ値を計算しています...";
         }
 
-        public static void EncryptionProgressUpdate(long progress)
+        public static void EncryptionUpdate(long progress)
         {
             if (ProgressBar1.Style == ProgressBarStyle.Marquee)
                 return;
@@ -29,7 +29,7 @@ namespace SafeRijndael
             Label1.Text = FormatSize(ProgressBar1.Value) + "/" + FormatSize(ProgressBar1.Maximum);
         }
 
-        public static void ProgressMaximumPatch(string path)
+        public static void MaximumPatch(string path)
         {
             if (ProgressBar1.Style == ProgressBarStyle.Marquee)
                 return;
@@ -39,7 +39,7 @@ namespace SafeRijndael
             Label1.Text = FormatSize(ProgressBar1.Value) + "/" + FormatSize(ProgressBar1.Maximum);
         }
 
-        public static void DencryptionProgressUpdate(long progress)
+        public static void DencryptionUpdate(long progress)
         {
             if (ProgressBar1.Style == ProgressBarStyle.Marquee)
                 return;
@@ -61,7 +61,7 @@ namespace SafeRijndael
             return amt.ToString();
         }
 
-        public static void StyletoMarqueeChange()
+        public static void ChangeToMarquee()
         {
             if (FormatSize(ProgressBar1.Maximum).Contains("MB"))
             { ProgressBar1.Style = ProgressBarStyle.Blocks;  return; }

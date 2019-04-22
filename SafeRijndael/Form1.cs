@@ -67,7 +67,7 @@ namespace SafeRijndael
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dialog = FileOperation.BrowserDialog)
+            using (FolderBrowserDialog dialog = FileOperation.FolderDialog)
             {
                 if (checkBox2.Checked)
                 {
@@ -85,7 +85,7 @@ namespace SafeRijndael
 
         private void フォルダを開くToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog dialog = FileOperation.BrowserDialog)
+            using (FolderBrowserDialog dialog = FileOperation.FolderDialog)
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {

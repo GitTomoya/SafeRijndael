@@ -26,12 +26,15 @@ namespace SafeRijndael
         private async void button1_ClickAsync(object sender, EventArgs e)
         {
             panel2.Visible = false; panel1.Visible = true;
-            Progress.ProgressBar1 = this.progressBar1; Progress.Label1 = this.label1; Progress.Label2 = this.label2;
+            Progress.ProgressBar1 = this.progressBar1;
+            Progress.Label1 = this.label1; Progress.Label2 = this.label2;
 
-            await CryptoExecution();
+            await CryptoExecution();//暗号化、または復号処理
 
             button2.Enabled = false;
+
             await Task.Delay(1500);//視覚的に分かりやすいよう僅かに待機
+
             if (settings.進捗終了時のメッセージ) MessageBox.Show("完了！", "確認", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             if (settings.プログレスウィンドウを出力後に閉じる) this.Close();
         }
@@ -65,7 +68,7 @@ namespace SafeRijndael
                         CryptoMode = TextBox1.Text.Contains(".safer")
                         ? CryptoMode.DENCRYPTION : CryptoMode.ENCRYPTION
                     };
-                    Progress.InitializationProgress(TextBox1.Text);
+                    Progress.Initialization(TextBox1.Text);
                     await FileBranchProcessingAsync(crypto, tokenSource);//分岐処理まとめた関数
                 }
             }

@@ -39,7 +39,7 @@ namespace SafeRijndael
         /// フォルダダイアログを取得します
         /// </summary>
         /// <returns></returns>
-        public static FolderBrowserDialog BrowserDialog
+        public static FolderBrowserDialog FolderDialog
         {
             get
             {

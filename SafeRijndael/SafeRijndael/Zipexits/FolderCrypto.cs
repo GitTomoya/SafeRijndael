@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Web;
+using System;
+using System.Text;
 
 namespace SafeRijndael
 {
@@ -14,19 +14,17 @@ namespace SafeRijndael
         {
             foreach (string file in GetAllFiles(readPath, outPath))//ファイルを列挙
             {
-                string relative = RelativeDirPath(new Uri(outPath), new Uri(file));//出力先の相対パス
+                Progress.Initialization(file);//プログレスバーに初期値をセット 
+                Progress.ChangeToMarquee(); //状況に合わせてプログレスバーの表示を変更
 
-                Progress.InitializationProgress(file);//プログレスバーに初期値をセット 
-                Progress.StyletoMarqueeChange(); //状況に合わせてプログレスバーの表示を変更
-
-                await base.WriteStreamAsync(password, file, OutDirPath(outPath, relative), token); //列挙されたファイルを一つずつ処理
+                await base.WriteStreamAsync(password, file, OutDirPath(outPath, RelativeDirPath(new Uri(outPath), new Uri(file))), token); //列挙されたファイルを一つずつ処理
 
                 if (token.IsCancellationRequested) break;//処理の中断
 
                 switch (CryptoMode)
                 {
                     case CryptoMode.ENCRYPTION://暗号化
-                        ZipExit.ZipFileExit(outPath + "\\out.zip", file + ".safer", relative);//出力された.saferファイルをzipファイルに追加
+                        ZipExit.Exit(outPath + @"\" + ZipFileName(readPath) + ".zip", file + ".safer");//出力された.saferファイルをzipファイルに追加
                         DeleteTemporaryFile(file + ".safer");//一時的に作成された.saferファイルを消去
                         break;
                     case CryptoMode.DENCRYPTION:
@@ -50,19 +48,9 @@ namespace SafeRijndael
             }
             else
             {
-                ZipExit.UnZipExtract(readPath , outPath + "\\" + ZipFileName(readPath));　//.zipファイルを解凍しフォルダに出力
-                return Directory.EnumerateFiles(outPath + "\\" + ZipFileName(readPath), "*", SearchOption.AllDirectories);
+                ZipExit.Extract(readPath , outPath + @"\" + ZipFileName(readPath));　//.zipファイルを解凍しフォルダに出力
+                return Directory.EnumerateFiles(outPath + @"\" + ZipFileName(readPath), "*", SearchOption.AllDirectories);
             }
-        }
-
-        /// <summary>
-        /// zipファイルのパスから拡張子を除いたファイル名を取得します
-        /// </summary>
-        /// <param name="zipPath"></param>
-        /// <returns></returns>
-        private string ZipFileName(string zipPath)
-        {
-            return Path.GetFileNameWithoutExtension(zipPath);
         }
 
         /// <summary>
@@ -86,7 +74,18 @@ namespace SafeRijndael
         private string RelativeDirPath(Uri outUri, Uri fileUri)
         {
             return HttpUtility.UrlDecode(outUri.MakeRelativeUri
-                (fileUri).ToString().Replace("/", "\\"), Encoding.UTF8);
+                (fileUri).ToString().Replace("/", @"\"), Encoding.UTF8);
+        }
+
+
+        /// <summary>
+        /// zipファイルのパスから拡張子を除いたファイル名を取得します
+        /// </summary>
+        /// <param name="zipPath"></param>
+        /// <returns></returns>
+        private string ZipFileName(string zipPath)
+        {
+            return Path.GetFileNameWithoutExtension(zipPath);
         }
 
         /// <summary>

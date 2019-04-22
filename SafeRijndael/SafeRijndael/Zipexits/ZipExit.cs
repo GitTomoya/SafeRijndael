@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.IO;
+using System.IO.Compression;
 
 namespace SafeRijndael
 {
@@ -10,12 +11,21 @@ namespace SafeRijndael
         /// <param name="readZip"></param>
         /// <param name="readFile"></param>
         /// <param name="outDir"></param>
-        public static void ZipFileExit(string readZip ,string readFile, string outDir)
+        public static void Exit(string readZip ,string readFile)
         {
-            using (ZipArchive archive = ZipFile.Open(readZip, ZipArchiveMode.Update))
+            if (!File.Exists(readZip))
             {
-                archive.CreateEntryFromFile(readFile,
-                    outDir + ".safer", CompressionLevel.Optimal);
+                using (Ionic.Zip.ZipFile zip = new Ionic.Zip.ZipFile())
+                {
+                    zip.Save(readZip);
+                }
+            }
+
+            using (Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(readZip))
+            {
+                zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression;
+                zip.AddFile(readFile);
+                zip.Save();
             }
         }
 
@@ -24,7 +34,7 @@ namespace SafeRijndael
         /// </summary>
         /// <param name="readPath"></param>
         /// <param name="outPath"></param>
-        public static void UnZipExtract(string readPath ,string outPath)
+        public static void Extract(string readPath ,string outPath)
         {
             ZipFile.ExtractToDirectory(readPath, outPath);
         }
